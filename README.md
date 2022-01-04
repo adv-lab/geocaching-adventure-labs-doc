@@ -12,6 +12,12 @@ The consumerKey is `A01A9CA1-29E0-46BD-A270-9D894A527B91`
 
 By default, responses will be in JSON format. With the "Accept" header set, you can also get XML format.
 
+### X-Consumer-Key header
+
+Update as of July 2021: all requests must now contain the `X-Consumer-Key` header, set to the consumerKey.
+
+    X-Consumer-Key: A01A9CA1-29E0-46BD-A270-9D894A527B91
+
 ## Authentication
 
 Authentication is done with the “Authorization” header however most data is available without authentication. Authentication is required to check answers, claim finds and post logs and ratings.
