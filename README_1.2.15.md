@@ -1,3 +1,5 @@
+**This is for an old version of the app and no longer works. See [README.md](README.md) for an updated version.**
+
 # Geocaching Adventure Labs
 
 This is an unofficial documentation of how the Geocaching Adventure Labs API and mobile app work. It is based on the Android version 1.2.15 of the official [Groundspeak Adventure Labs app](https://play.google.com/store/apps/details?id=com.groundspeak.react.adventures). This documentation is incomplete.
