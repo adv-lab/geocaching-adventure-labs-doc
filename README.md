@@ -159,9 +159,7 @@ Once we have the GUID of the Adventure Lab we are interested in, we can load the
     Accept-Encoding: gzip
     X-Consumer-Key: A01A9CA1-29E0-46BD-A270-9D894A527B91
 
-The response to this is mostly self-explanatory but it does vary slightly if you are logged in. If logged in, you get information on which stage you have already completed and a bit of data named `findCodeHashBase16v2` which is required to check answers to the question.
-
-There is also `answerCodeHashesBase16v2`. I don't know what the difference is, it appears to be the same as `findCodeHashBase16v2` (which is also the same as `findCodeHashBase16` from the previous version)
+The response to this is mostly self-explanatory but it does vary slightly if you are logged in. If logged in, you get information on which stages you have already completed and a bit of data named `findCodeHashBase16v2` (or `answerCodeHashesBase16v2`) which is required to check answers to the question.
 
 ### Past logs
 
@@ -183,7 +181,7 @@ Note that this is a POST request with no body. Not sure why.
 
 When the user enters the answer to a stage it is first checked locally (by comparing hashes) and if it is correct, it is then sent to the server. The server also checks that submitted answers are correct.
 
-### Local (hash) check (v1.2.15)
+### Local (hash) check
 
 The `FindCodeHashBase16` value returned in the cache details is a MD5 hash of the user's public GUID (from the Get user account details request) and the answer concatenated together. Spaces are removed and all uppercase letters are converted to lowercase. The algorithm is shown below.
 
@@ -195,15 +193,23 @@ The `FindCodeHashBase16` value returned in the cache details is a MD5 hash of th
         // Answer is correct
     }
 
-If the hash does not match, the app then replaces any occurrences of `"1920"` in the answer with a single apostrophe `"'"` and checks the hash again. If this also fails, the reverse is tried, any apostrophes are replaced with the string `"1920"` and the hash calculated and checked again. If this fails as well, then the answer is deemed to be incorrect.
+The space removal is done with a Regex match to `\s` (the JavaScript variant) so tabs, non-breaking spaces, ideographic spaces, etc. are also removed. For a full list see: [https://en.wikipedia.org/wiki/Whitespace_character](https://en.wikipedia.org/wiki/Whitespace_character)
 
-The space removal is done with a Regex match to `\s` (the JavaScript variant) so tabs, non-breaking spaces, ideographic spaces, etc. are also removed.
+#### Hash versions
 
-#### Versions
+The above is from version 1.2.15 of the app. In version 1.56.0, it gives `findCodeHashBase16v2` and `answerCodeHashesBase16v2`
 
-The above is from version 1.2.15 of the app. In version 1.56.0, it only gives `findCodeHashBase16v2` and `answerCodeHashesBase16v2`
+##### `findCodeHashBase16v2`
 
-These three values all appear to be the same on all the ALs I've looked at so I don't know what the difference between them is. But the hash check method from version 1.2.15 still seems to work.
+In addition to removing spaces in the same way as v1, the difference in v2 is that it also replaces the following characters before calculating the hash:
+* `U+2013` and `U+2014` get replaced with `U+002D` (a minus sign)
+* `U+2018` and `U+2019` get replaced with `U+0027` (an apostrophe)
+* `U+201C` and `U+201D` get replaced with `U+0022` (a quotation mark)
+* (this list comes from answers seen in real ALs, so there could be more characters in this list that we haven't seen yet)
+
+##### Multiple correct answers
+
+As of about 2026, it has been possible to create AL stages with more than one correct answer. The API handles this with the `answerCodeHashesBase16v2` field, which contains a list of hashes. A match against any of these hashes is considered to be correct.
 
 ### Server check
 
