@@ -18,6 +18,16 @@ Update as of July 2021: all requests must now contain the `X-Consumer-Key` heade
 
     X-Consumer-Key: A01A9CA1-29E0-46BD-A270-9D894A527B91
 
+Updated as of September 2026: There are actually two consumer keys that can be used:
+
+Platform    Production consumer key
+  ━━━━━━━━━━  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   Android     A01A9CA1-29E0-46BD-A270-9D894A527B91
+  ──────────  ──────────────────────────────────────
+   iOS         1301D998-6435-4804-8CA8-9A5DE607269A
+
+This is as of the 1.6.5 version of the Android app.
+
 ## Authentication
 
 Authentication is done with the “Authorization” header however most data is available without authentication. Authentication is required to check answers, claim finds and post logs and ratings.
